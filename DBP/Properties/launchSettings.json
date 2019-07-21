@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DBP": {
+      "commandName": "Project",
+      "commandLineArgs": "yo hi"
+    }
+  }
+}
