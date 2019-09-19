@@ -34,14 +34,14 @@ namespace Proximus
             runtimeLogger(message);
         }
 
-        public void LogMultiple(string message)
+        private void LogMultiple(string message)
         {
-            Parallel.ForEach(sinks, (sink) => sink.Log(message));
+            Parallel.ForEach(sinks, (s) => s.Log(message));
         }
 
-        public void LogSingle(string message)
+        private void LogSingle(string message)
         {
-            sinks.First().Log(message);
+            sink.Log(message);
         }
     }
 }

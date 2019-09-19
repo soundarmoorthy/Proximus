@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using LiteDB;
 
 namespace Proximus
@@ -14,11 +15,9 @@ namespace Proximus
 
         public WorkflowDatastore(string dir)
         {
-            database = new LiteDatabase(Path.Combine(dir, "transient.db"));
-
+            var file = Path.Combine(dir, "transient.db");
+            database = new LiteDatabase(file);
             geoCodes = database.GetCollection<GeoCode>();
-
-           
         }
 
         public IEnumerable<GeoCode> Geocodes()
@@ -28,9 +27,7 @@ namespace Proximus
 
         public void Add(GeoCode code)
         {
-            geoCodes.Insert(code);
+                    geoCodes.Insert(code);
         }
-
-
     }
 }

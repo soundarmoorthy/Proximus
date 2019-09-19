@@ -31,6 +31,7 @@ namespace Proximus
             if (code.Length == 7) //7  = 192 meter accuracy geohashes generation
             {
                 store.Add(new GeoCode() { Code = code });
+                Log($"Added {code}");
                 return;
             }
 
