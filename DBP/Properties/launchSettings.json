@@ -2,7 +2,7 @@
   "profiles": {
     "DBP": {
       "commandName": "Project",
-      "commandLineArgs": "yo hi"
+      "commandLineArgs": "C:\\IP\\dr5_adjlist.txt 2 dr5_error.txt"
     }
   }
 }

@@ -1,29 +1,24 @@
-﻿using Neo4j.Driver.V1;
-using Neo4jClient;
-using System;
+﻿
 using System.Collections.Generic;
-using System.IO;
 
-namespace DBP
+namespace Proximus
 {
     class Program
     {
+        static Logger logger = new Logger(new[] { new ConsoleLoggerSink() });
         static void Main(string[] args)
         {
-            var file = args[0];
+            WorkflowState state = new ProximusWorkflowState(logger, new WorkflowDatastore("."));
+            var workflow = new Workflow(steps(state));
+            workflow.StartAndWait();
+        }
 
-
-            var geoHashPopulator = new GeoHashPopulator();
-
-            using (var rd = new StreamReader(file))
-            {
-
-                while (!rd.EndOfStream)
-                {
-                    var geoHash = rd.ReadLine();
-                    geoHashPopulator.InsertIntoDbAsync(geoHash);                                       
-                }
-            }
+        private static IEnumerable<WorkflowStep> steps(WorkflowState state)
+        {
+            //The order of the steps matters
+            yield return new NyGeoHashGenerator(state);
+            //yield return new DistanceCalculator(state);
+            //yield return new Neo4jFileCreator(state);
         }
     }
 }
