@@ -15,7 +15,7 @@ namespace Proximus
         static OpenStreetMaps()
         {
         }
-        public static async Task<string> GetDistance(Location l1, Location l2)
+        public static double GetDistance(Location l1, Location l2)
         {
             var sourceLatLng = l1.Lat.ToString() + "," + l1.Lng.ToString();
             var destinationLatLng = l2.Lat.ToString() + "," + l2.Lng.ToString();
@@ -27,7 +27,7 @@ namespace Proximus
             {
                 var response = httpClient.GetAsync(uri);
 
-                var str = await response.Result.Content.ReadAsStringAsync();
+                var str = response.Result.Content.ReadAsStringAsync().Result;
                 var geoDistanceResponse = JsonConvert.DeserializeObject<GeoResponse>(str);
                 double distance = geoDistanceResponse.Paths?.FirstOrDefault().Distance ?? 0;
                 double duration = geoDistanceResponse.Paths?.FirstOrDefault().Time ?? 0;
@@ -38,7 +38,7 @@ namespace Proximus
                     duration = 1000; // 1 sec
                 }
                 duration /= 1000; //milli-sec -> sec
-                return distance.ToString();
+                return distance;
             }
         }
     }

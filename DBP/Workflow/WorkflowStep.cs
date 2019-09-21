@@ -1,5 +1,7 @@
 ﻿
 using System;
+using System.Collections.Concurrent;
+
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -10,6 +12,7 @@ namespace Proximus
         public abstract string Name { get; }
         Logger logger;
         protected WorkflowState State { private set; get; }
+
         public WorkflowStep(WorkflowState state)
         {
             this.State = state;

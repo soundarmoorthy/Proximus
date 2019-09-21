@@ -6,22 +6,22 @@ using System.Threading.Tasks;
 
 namespace Proximus
 {
-    public class GeoHashPopulator
+    public class OpenStreetMapsProxy
     {
 
-        public GeoHashPopulator()
+        public OpenStreetMapsProxy()
         {
 
         }
 
-        public async Task<string> FindDistance(string source, string dest)
-        {
+        public double FindDistance(string source, string dest)
+       {
             try
             {
                 var geoHash = new GeoHash();
                 var l1 = geoHash.Decode(source);
                 var l2 = geoHash.Decode(dest);
-                var distance = await OpenStreetMaps.GetDistance(l1, l2);
+                var distance =  OpenStreetMaps.GetDistance(l1, l2);
 
                 return distance;
             }
@@ -29,7 +29,7 @@ namespace Proximus
             {
                 Console.WriteLine(ex.ToString());
             }
-            return "null";
+            throw new Exception();
         }
     }
 }

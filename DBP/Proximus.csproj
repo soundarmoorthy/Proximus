@@ -18,6 +18,6 @@
     <Folder Include="NyGeoHashGenerator\" />
     <Folder Include="Workflow\" />
     <Folder Include="assets\" />
-    <Folder Include="Workflow\TransientStorage\" />
+    <Folder Include="AdjacentNodeComputer\" />
   </ItemGroup>
 </Project>
