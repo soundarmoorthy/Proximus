@@ -12,12 +12,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="GeoHashToDistance\" />
-    <Folder Include="Neo4jFileCreator\" />
-    <Folder Include="Logger\" />
-    <Folder Include="NyGeoHashGenerator\" />
     <Folder Include="Workflow\" />
     <Folder Include="assets\" />
-    <Folder Include="AdjacentNodeComputer\" />
+    <Folder Include="Workflow\Steps\" />
+    <Folder Include="Workflow\Steps\Neo4jFileCreator\" />
+    <Folder Include="Workflow\Steps\NyGeoHashGenerator\" />
+    <Folder Include="Workflow\Steps\GeoHashToDistance\" />
+    <Folder Include="Workflow\Steps\AdjacentNodeComputer\" />
+    <Folder Include="Workflow\Infrastructure\" />
+    <Folder Include="Workflow\Infrastructure\Logger\" />
   </ItemGroup>
 </Project>
