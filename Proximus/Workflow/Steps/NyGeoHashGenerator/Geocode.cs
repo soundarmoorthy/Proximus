@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Proximus
 {
-    public class Geocode : IEntity
+    public class Geocode : IEntity, IEquatable<Geocode>
     {
         public string Code { get; set; }
         public Geocode()
@@ -18,14 +18,12 @@ namespace Proximus
             }
         }
 
-        public override bool Equals(object other)
+        public bool Equals(Geocode other)
         {
             if (other == null)
                 return false;
-            if (other.GetType() != this.GetType())
-                return false;
 
-            return this.Code == ((Geocode)other).Code;
+            return this.Code == other.Code;
         }
     }
 }

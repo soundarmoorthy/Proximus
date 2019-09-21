@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using LiteDB;
@@ -53,11 +54,11 @@ namespace Proximus
 
         public void Add(T data)
         {
-            collection.Insert(data);
+            collection.Upsert(data);
         }
 
         public IEnumerable<T> enumerate() => collection.Query().ToEnumerable();
 
-        public bool Exists(T data) => collection.Exists(x => data.Equals(x));
+        public bool Exists(T data) => false;
     }
 }
