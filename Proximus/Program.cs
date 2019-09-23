@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 
 namespace Proximus
@@ -18,8 +19,6 @@ namespace Proximus
         private WorkflowState state;
         public WorkflowRunner()
         {
-            logger = new Logger(new[] { new ConsoleLoggerSink() });
-            state = new ProximusWorkflowState(logger, new WorkflowDatastore("."));
             workflow = new Workflow(steps());
 
         }
@@ -31,11 +30,19 @@ namespace Proximus
 
         private IEnumerable<WorkflowStep> steps()
         {
+            SetupWorkflowPrerequisites();
             //The order of the steps matters
-            yield return new NyGeoHashGenerator(state);
-            yield return new AdjecencyNodeProcessor(state);
-            //yield return new DistanceCalculator(state);
+            //yield return new NyGeoHashGenerator(state);
+            //yield return new AdjecencyNodeProcessor(state);
+            yield return new DistanceCalculator(state);
             //yield return new Neo4jFileCreator(state);
+        }
+
+        private void SetupWorkflowPrerequisites()
+        {
+            logger = new Logger(ConsoleLoggerSink.Instance);
+            state = new ProximusWorkflowState(logger, new WorkflowDatastore("."));
+
         }
     }
 }

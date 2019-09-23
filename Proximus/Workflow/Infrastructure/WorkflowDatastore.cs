@@ -36,9 +36,9 @@ namespace Proximus
 
         public IEnumerable<Geocode> Geocodes() => codes.enumerate();
 
-        internal bool Exists(Geocode geoCode) => codes.Exists(geoCode);
+        public bool Exists(Geocode geoCode) => codes.Exists(geoCode);
 
-        internal bool Exists(GeocodeMatrix matrix) => matrices.Exists(matrix);
+        public bool Exists(GeocodeMatrix matrix) => matrices.Exists(matrix);
     }
 
     public class DBCollection<T> where T : IEntity
@@ -48,7 +48,7 @@ namespace Proximus
 
         public DBCollection(string dir)
         {
-            database = new LiteDatabase(Path.Combine(dir, $"{nameof(T)}.db"));
+            database = new LiteDatabase(Path.Combine(dir, $"{typeof(T).FullName}.db"));
             collection = database.GetCollection<T>();
         }
 

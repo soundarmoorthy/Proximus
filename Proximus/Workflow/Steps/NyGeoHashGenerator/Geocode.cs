@@ -25,5 +25,9 @@ namespace Proximus
 
             return this.Code == other.Code;
         }
+        public override string ToString()
+        {
+            return Code;
+        }
     }
 }

@@ -10,7 +10,7 @@ namespace Proximus
         readonly IEnumerable<ILoggerSink> sinks;
         readonly ILoggerSink sink;
         Action<string> runtimeLogger;
-        public Logger(IEnumerable<ILoggerSink> sinks)
+        public Logger(params ILoggerSink[] sinks)
         {
             if (sinks == null || sinks.Count() == 0)
             {

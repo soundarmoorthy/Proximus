@@ -46,8 +46,13 @@ namespace Proximus
             for (int i = 48; i <= 57; i++)
                 yield return (char)i;
 
-            for (int i = 97; i <= 122; i++)
+            for (int i = 98; i <= 122; i++)
+            {
+                if (i == 'a' || i == 'i' || i == 'l' || i=='o' || i == 'w')
+                    continue;
+
                 yield return (char)i;
+            }
         }
     }
 }

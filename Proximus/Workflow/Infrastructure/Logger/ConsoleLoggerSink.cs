@@ -3,9 +3,20 @@ namespace Proximus
 {
     public class ConsoleLoggerSink : ILoggerSink
     {
-        public ConsoleLoggerSink()
+        private ConsoleLoggerSink()
         {
 
+        }
+
+        private static ConsoleLoggerSink sink;
+        public static ConsoleLoggerSink Instance
+        {
+            get
+            {
+                if (sink == null)
+                    sink = new ConsoleLoggerSink();
+                return sink;
+            }
         }
 
         public void Log(string message)

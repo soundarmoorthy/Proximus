@@ -2,8 +2,6 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
-using StackExchange.Redis;
 
 namespace Proximus
 {
@@ -32,16 +30,17 @@ namespace Proximus
 
             var store = this.State.Store;
             var osm = new OpenStreetMapsProxy();
-            Parallel.ForEach(store.GeocodeMatrices(), (m) =>
+            //Parallel.ForEach(store.GeocodeMatrices(), (m) =>
+            foreach (var m in store.GeocodeMatrices())
             {
                 foreach (var n in f(m))
                 {
                     var c = m.GeoCode.Code;
                     var d = osm.FindDistance(c, n);
                     store.Add(GeoDistance.Create(c, n, d));
-                    this.State.Logger.Log($"Added {c}->{m}{d}");
                 }
-            });
+            }
+            //});
         }
 
         public IEnumerable<string> f(GeocodeMatrix m) => m.Neighbours().Select(x => x.Code);

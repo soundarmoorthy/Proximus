@@ -16,11 +16,14 @@ namespace Proximus
         public override void Start()
         {
             var s = store();
-            Parallel.ForEach(s.Geocodes(), (geo) =>
+            //Parallel.ForEach(s.Geocodes(), (geo) =>
+            foreach (var geo in s.Geocodes())
             {
                 var matrix = NodeNeighbour.Neighbours(geo.Code);
+                Log($"Generated {matrix}");
                 s.Add(matrix);
-            });
+            }
+            //);
         }
 
         public override void Stop()

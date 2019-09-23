@@ -7,36 +7,46 @@ namespace Proximus
     public class GeocodeMatrix : IEntity
     {
         public readonly Geocode GeoCode;
-        private readonly Dictionary<Direction, Geocode> f;
-        private GeocodeMatrix(string geoHash)
-        {
-            this.GeoCode = new Geocode() {Code = geoHash };
-            var kvps = from name in Enum.GetNames(typeof(Direction))
-                       let direction = (Direction)Enum.Parse(typeof(Direction), name)
-                       select new KeyValuePair<Direction, Geocode>(direction, Geocode.None);
+        public readonly Geocode[] neighbours;
 
-            f = new Dictionary<Direction, Geocode>(kvps);
+        public GeocodeMatrix()
+        {
+
+        }
+
+        public GeocodeMatrix(string geoHash)
+        {
+            this.GeoCode = new Geocode() { Code = geoHash };
+
+            var count = Enum.GetValues(typeof(Direction)).GetLength(0);
+            neighbours = new Geocode[count];
         }
 
 
         public static GeocodeMatrix Create(string geohash) => new GeocodeMatrix(geohash);
       
-        public IEnumerable<Geocode> Neighbours() => f.Values;
+        public IEnumerable<Geocode> Neighbours() => neighbours;
 
-        public GeocodeMatrix Add(Direction x, string c)
+        private int index=0;
+        public GeocodeMatrix Add(string c)
         {
-            f[x] = new Geocode() { Code = c };
+            neighbours[index++] = new Geocode() { Code = c };
             return this;
         }
 
-        public override bool Equals(object other)
+        public override bool Equals(object obj)
         {
-            if (other == null)
+            if (obj == null)
                 return false;
-            if (other.GetType() != this.GetType())
+            if (obj.GetType() != this.GetType())
                 return false;
 
-            return this.GeoCode == ((GeocodeMatrix)other).GeoCode;
+            return this.GeoCode == ((GeocodeMatrix)obj).GeoCode;
+        }
+
+        public override string ToString()
+        {
+            return $"{this.GeoCode}-[{string.Join(',', neighbours.Select(x => x.Code))}]";
         }
 
     }
