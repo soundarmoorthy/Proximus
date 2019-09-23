@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Proximus
@@ -16,7 +17,6 @@ namespace Proximus
 
         //Geo hash prefixes for new york area
         private readonly IEnumerable<string> codes = new[] { "dr8", "dr9", "drd", "dre", "drf", "drg", "dr7", "drk", "dr5" };
-
 
         public override void Start()
         {

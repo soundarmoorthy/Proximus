@@ -6,8 +6,8 @@ namespace Proximus
 {
     public class GeocodeMatrix : IEntity
     {
-        public readonly Geocode GeoCode;
-        public readonly Geocode[] neighbours;
+        public Geocode GeoCode { get; set; }
+        public Geocode[] neighbours { get; set; }
 
         public GeocodeMatrix()
         {
@@ -26,7 +26,7 @@ namespace Proximus
         public static GeocodeMatrix Create(string geohash) => new GeocodeMatrix(geohash);
       
         public IEnumerable<Geocode> Neighbours() => neighbours;
-
+            
         private int index=0;
         public GeocodeMatrix Add(string c)
         {

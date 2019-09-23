@@ -39,6 +39,7 @@ namespace Proximus
             var keys = this.State.Store.GeoDistances();
             HashSet<string> nodes = new HashSet<string>();
             int j = 0;
+            //Writing to file in parallel has other implications. So not doing it.
             foreach (var key in keys)
             {
                 var start = key.Start.Code;
