@@ -32,10 +32,10 @@ namespace Proximus
         {
             SetupWorkflowPrerequisites();
             //The order of the steps matters
-            //yield return new NyGeoHashGenerator(state);
-            //yield return new AdjecencyNodeProcessor(state);
+            yield return new NyGeoHashGenerator(state);
+            yield return new AdjecencyNodeProcessor(state);
             yield return new DistanceCalculator(state);
-            //yield return new Neo4jFileCreator(state);
+            yield return new Neo4jFileCreator(state);
         }
 
         private void SetupWorkflowPrerequisites()
