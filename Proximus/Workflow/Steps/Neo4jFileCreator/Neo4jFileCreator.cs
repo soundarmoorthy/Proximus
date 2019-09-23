@@ -26,8 +26,6 @@ namespace Proximus
         private async Task CreateFilesForNeo4JImport()
         {
             //This is the redis service 
-            var conn = ConnectionMultiplexer.Connect("localhost:6379");
-            IDatabase db = conn.GetDatabase();
             //These file names and the folder names will be used in the neo4j-admin command
             //when importing nodes and edges into the graph database. If you change these
             //you need to change the corresponding names in the import command.
@@ -38,20 +36,18 @@ namespace Proximus
 
 
             //This is the redis service which is expected to run locally
-            var keys = conn.GetServer("localhost:6379").Keys();
-            HashSet<string> set = new HashSet<string>();
+            var keys = this.State.Store.GeoDistances();
+            HashSet<string> nodes = new HashSet<string>();
             int j = 0;
             foreach (var key in keys)
             {
-                var nodes = ((string)key).Split(':');
-                var start = nodes[0];
-                var end = nodes[1];
-                var distance = db.StringGet(key);
-
-                if (!set.Contains(start))
-                    set.Add(start);
-                if (!set.Contains(end))
-                    set.Add(end);
+                var start = key.Start.Code;
+                var end = key.End.Code;
+                var distance = key.Miles;
+                if (!nodes.Contains(start))
+                    nodes.Add(start);
+                if (!nodes.Contains(end))
+                    nodes.Add(end);
                 //The keyword ROAD will be referred by the edges_header.csv file in the assets folder.
                 await edgesFile.WriteLineAsync($"{start},{distance},{end},ROAD");
                 if (j % 1000 == 0)
@@ -61,16 +57,15 @@ namespace Proximus
                 j++;
             }
 
-            foreach (var key in set)
+            foreach (var key in nodes)
             {
                 //The keywork GEOHASH will be referred by the nodes_header.csv file in the assets folder.
                 await nodesFile.WriteLineAsync($"{key},GEOHASH");
             }
 
-            set.Clear();
+            nodes.Clear();
             nodesFile.Close();
             edgesFile.Close();
-            conn.Close();
         }
     }
 }
