@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 
 namespace Proximus
 {
-    public class AdjecencyNodeProcessor : WorkflowStep
+    internal class AdjecencyNodeProcessor : WorkflowStep
     {
-        public AdjecencyNodeProcessor(WorkflowState state) : base(state)
+        internal AdjecencyNodeProcessor(WorkflowState state) : base(state)
         {
         }
 

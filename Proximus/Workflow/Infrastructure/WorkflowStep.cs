@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace Proximus
 {
-    public abstract class WorkflowStep
+    internal abstract class WorkflowStep
     {
         public abstract string Name { get; }
         Logger logger;
         protected WorkflowState State { private set; get; }
 
-        public WorkflowStep(WorkflowState state)
+        internal WorkflowStep(WorkflowState state)
         {
             this.State = state;
             this.logger = state.Logger;

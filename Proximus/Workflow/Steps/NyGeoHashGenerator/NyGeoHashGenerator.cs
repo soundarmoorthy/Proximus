@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace Proximus
 {
-    public class NyGeoHashGenerator : WorkflowStep
+    internal class NyGeoHashGenerator : WorkflowStep
     {
         WorkflowDatastore store;
         GeohashAlgorithm algorithm;
-        public NyGeoHashGenerator(WorkflowState state) : base (state)
+        internal NyGeoHashGenerator(WorkflowState state) : base (state)
         {
             algorithm = new GeohashAlgorithm(state.Store, this.Log);
             store = state.Store;

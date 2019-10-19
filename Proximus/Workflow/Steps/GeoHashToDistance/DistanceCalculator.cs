@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Proximus
 {
-    public class DistanceCalculator : WorkflowStep
+    internal class DistanceCalculator : WorkflowStep
     {
         
-        public DistanceCalculator(WorkflowState state) : base(state)
+        internal DistanceCalculator(WorkflowState state) : base(state)
         {
 
         }

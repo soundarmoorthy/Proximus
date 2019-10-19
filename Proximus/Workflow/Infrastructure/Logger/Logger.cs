@@ -5,19 +5,25 @@ using System.Threading.Tasks;
 
 namespace Proximus
 {
-    public class Logger
+    internal class Logger
     {
         readonly IEnumerable<ILoggerSink> sinks;
         readonly ILoggerSink sink;
         Action<string> runtimeLogger;
-        public Logger(params ILoggerSink[] sinks)
+
+        internal Logger(ILoggerSink sink)
+        {
+            this.sink = sink;
+            runtimeLogger = LogSingle;
+        }
+
+        internal Logger(IEnumerable<ILoggerSink> sinks)
         {
             if (sinks == null || sinks.Count() == 0)
             {
                 runtimeLogger = (msg) => { };
             }
-
-            if (sinks.Count() <= 1)
+            if (sinks.Count() == 1)
             {
                 this.sink = sinks.First();
                 runtimeLogger = LogSingle;
@@ -36,7 +42,17 @@ namespace Proximus
 
         private void LogMultiple(string message)
         {
-            Parallel.ForEach(sinks, (s) => s.Log(message));
+            var exHandler = Parallel.ForEach(sinks, (s) =>
+            {
+                try
+                {
+                    s.Log(message);
+                }
+                catch (Exception)
+                {
+                }
+            });
+
         }
 
         private void LogSingle(string message)

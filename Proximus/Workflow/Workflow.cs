@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Proximus
 {
-    public sealed class Workflow
+    internal sealed class Workflow
     {
 
         IEnumerable<WorkflowStep> Steps;
-        public Workflow(IEnumerable<WorkflowStep> steps)
+        internal Workflow(IEnumerable<WorkflowStep> steps)
         {
             this.Steps = steps;
         }

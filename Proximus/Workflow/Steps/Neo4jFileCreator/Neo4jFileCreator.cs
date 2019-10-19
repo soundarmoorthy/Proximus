@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace Proximus
 {
-    public class Neo4jFileCreator : WorkflowStep
+    internal class Neo4jFileCreator : WorkflowStep
     { 
-        public Neo4jFileCreator(WorkflowState state) : base(state)
+        internal Neo4jFileCreator(WorkflowState state) : base(state)
         {
         }
 
