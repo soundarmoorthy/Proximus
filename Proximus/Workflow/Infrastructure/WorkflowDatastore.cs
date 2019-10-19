@@ -11,16 +11,17 @@ namespace Proximus
         private  DBCollection<Geocode> codes;
         private  DBCollection<GeoDistance> distances;
         private  DBCollection<GeocodeMatrix> matrices;
-        public WorkflowDatastore(string dir)
+        public WorkflowDatastore(string dir, bool drop=false)
         {
-            InitializeStore(dir);
+            InitializeStore(dir, drop);
 
         }
-        private void InitializeStore(string dir)
+
+        private void InitializeStore(string dir, bool drop)
         {
-            codes = new DBCollection<Geocode>(dir);
-            distances = new DBCollection<GeoDistance>(dir);
-            matrices = new DBCollection<GeocodeMatrix>(dir);
+            codes  =  new DBCollection<Geocode>(dir, drop);
+            distances = new DBCollection<GeoDistance>(dir,drop);
+            matrices = new DBCollection<GeocodeMatrix>(dir,drop);
         }
 
 
@@ -36,9 +37,10 @@ namespace Proximus
 
         public IEnumerable<Geocode> Geocodes() => codes.enumerate();
 
-        public bool Exists(Geocode geoCode) => codes.Exists(geoCode);
-
+        public bool Exists(Geocode code) => codes.Exists(code);
         public bool Exists(GeocodeMatrix matrix) => matrices.Exists(matrix);
+        public bool Exists(GeoDistance distance) => distances.Exists(distance);
+
     }
 
     public class DBCollection<T> where T : IEntity
@@ -46,10 +48,21 @@ namespace Proximus
         LiteDatabase database;
         LiteCollection<T> collection;
 
-        public DBCollection(string dir)
+        /// <summary>
+        /// Initialize the DBCollection
+        /// </summary>
+        /// <param name="dir">Directory in which the collection should be created. Read and Write permissions 
+        /// should exist</param>
+        /// <param name="drop">Delete existing collection, if this is True. But in production we 
+        /// won't set this to true. This is primarily used during 
+        /// testing to cleanup the files and use freash ones for each run</param>
+        public DBCollection(string dir, bool drop=false)
         {
             database = new LiteDatabase(Path.Combine(dir, $"{typeof(T).FullName}.db"));
-            collection = database.GetCollection<T>();
+            if (drop)
+                database.DropCollection(typeof(T).Name);
+
+            collection = database.GetCollection<T>(typeof(T).Name);
         }
 
         public void Add(T data)
@@ -57,8 +70,11 @@ namespace Proximus
             collection.Upsert(data);
         }
 
-        public IEnumerable<T> enumerate() => collection.Query().ToEnumerable();
+        public bool Exists(T data)
+        {
+            return collection.Find(x => x.Equals(data)).Any();
+        }
 
-        public bool Exists(T data) => false;
+        public IEnumerable<T> enumerate() => collection.Query().ToEnumerable();
     }
 }

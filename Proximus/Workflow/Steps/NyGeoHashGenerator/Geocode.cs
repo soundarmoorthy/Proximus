@@ -14,9 +14,11 @@ namespace Proximus
         {
             get
             {
-                return new Geocode() { Code = null };
+                return new Geocode() { Code = NoneCode };
             }
         }
+
+        public const string NoneCode = "!@#$%^&*";
 
         public bool Equals(Geocode other)
         {
@@ -28,6 +30,12 @@ namespace Proximus
         public override string ToString()
         {
             return Code;
+        }
+
+        public override int GetHashCode()
+        {
+            var hash =  this.Code.GetHashCode();
+            return hash;
         }
     }
 }

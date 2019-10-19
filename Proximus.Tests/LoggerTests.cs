@@ -12,6 +12,14 @@ namespace Proximus.Tests
     {
         const string hi = "hi";
 
+        [TestMethod]
+        public void ConsoleLoggerSink_Is_Singleton()
+        {
+            Assert.ReferenceEquals(ConsoleLoggerSink.Instance,
+                ConsoleLoggerSink.Instance);
+        }
+
+
         /// <summary>
         /// Verifies if all the registered log sinks are called when Logger.Log is called
         /// </summary>
@@ -22,10 +30,24 @@ namespace Proximus.Tests
             Logger logger = new Logger(loggerSinks.Select(x => x.Object));
             logger.Log(hi);
 
+            
             foreach (var sink in loggerSinks)
             {
                 sink.Verify(x => x.Log(hi), Times.Exactly(1));
             }
+        }
+
+        /// <summary>
+        /// Verifies if single registered log sink is called correctly 
+        /// when Logger.Log is called
+        /// </summary>
+        [TestMethod]
+        public void Test_Single_Registered_Logger_Sink_Is_Called()
+        {
+            var sink = Create();
+            Logger logger = new Logger(sink.Object);
+            logger.Log(hi);
+            sink.Verify(x => x.Log(hi), Times.Exactly(1));
         }
 
         private IEnumerable<Mock<ILoggerSink>> GetLoggerSinks() 
