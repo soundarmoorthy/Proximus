@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Proximus
@@ -13,8 +14,22 @@ namespace Proximus
             this.store = datastore;
             this.Log = log;
         }
+        
+        internal void ComputeAndStore(string code)
+        {
+            if (code.Distinct().Union(suffix()).Count() > suffix().Count())
+            {
+                throw new ArgumentException
+                    ($"{nameof(code)} is not valid. Please refer to Geohash algorithm for allowed characters");
+            }
+            else
+            {
+                Compute(code);
+            }
+            Compute(code);
+        }
 
-        internal void Compute(string code)
+        private void Compute(string code)
         {
             if (code.Length == 7) //7  = 192 meter accuracy geohashes generation
             {
@@ -37,10 +52,20 @@ namespace Proximus
 
         }
 
+
         /// These are standard geo hash suffixes. Given a 3 digit geo code as mentioned above (e.x dr9)
         /// The below function returns the possible suffixes which are valid neighbouring geo hashes
         /// at a 192 meter accuracy. 
+
+        private static List<char> suffixes;
         internal static IEnumerable<char> suffix()
+        {
+            if (suffixes == null)
+                suffixes = new List<char>(initializeSuffixes());
+            return suffixes;
+        }
+
+        private static IEnumerable<char> initializeSuffixes()
         {
             for (int i = 48; i <= 57; i++)
                 yield return (char)i;

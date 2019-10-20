@@ -22,7 +22,7 @@ namespace Proximus
         {
           var result =   Parallel.ForEach(codes, (code, loopCtl) =>
             {
-                algorithm.Compute(code);
+                algorithm.ComputeAndStore(code);
             });
         }
 

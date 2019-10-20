@@ -11,26 +11,26 @@ namespace Proximus.Tests
     {
         private const string MemoryStreamDB = null;
         [TestMethod]
-        public void Test_GeoHashAlgorithm_Computes_Only_GeoHashes_With_Length_7()
+        public void Computes_Only_GeoHashes_With_Length_7()
         {
             using (WorkflowDatastore store = new WorkflowDatastore(MemoryStreamDB))
             {
                 GeohashAlgorithm a = new GeohashAlgorithm(store, x => { });
                 var code = "23fghn9";
-                a.Compute(code);
+                a.ComputeAndStore(code);
                 Assert.AreEqual(code, store.Geocodes().First().Code);
                 Assert.AreEqual(store.Geocodes().Count(), 1);
             }
         }
 
         [TestMethod]
-        public void Test_GeoHashAlgorithm_Computes_All_Valid_Suffixes()
+        public void Computes_All_Valid_Suffixes()
         {
             using (WorkflowDatastore store = new WorkflowDatastore(MemoryStreamDB))
             {
                 GeohashAlgorithm a = new GeohashAlgorithm(store, x => { });
                 var code = "010123";
-                a.Compute(code);
+                a.ComputeAndStore(code);
 
                 var actuals = store.Geocodes().ToList();
                 Assert.AreEqual(actuals.Count(), GeohashAlgorithm.suffix().Count());
@@ -47,6 +47,17 @@ namespace Proximus.Tests
                     CollectionAssert.IsSubsetOf(actual.Code.Distinct().ToArray(),
                         GeohashAlgorithm.suffix().ToArray());
                 }
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Throws_Exception_On_Compute_For_Inalid_Chars()
+        {
+            using (var store = new WorkflowDatastore(MemoryStreamDB))
+            {
+                var a = new GeohashAlgorithm(store, x => { });
+                a.ComputeAndStore("lila");
             }
         }
     }
