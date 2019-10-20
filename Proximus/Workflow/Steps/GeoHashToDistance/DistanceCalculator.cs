@@ -8,10 +8,14 @@ namespace Proximus
 {
     internal class DistanceCalculator : WorkflowStep
     {
-        
-        internal DistanceCalculator(WorkflowState state) : base(state)
-        {
 
+        OpenStreetMapsProxy OsmProxy;
+        internal DistanceCalculator(WorkflowState state, OpenStreetMapsProxy proxy= null) : base(state)
+        {
+            if (proxy == null)
+                OsmProxy = new OpenStreetMapsProxy();
+            else
+                this.OsmProxy = proxy;
         }
 
         public override void Start()
@@ -28,9 +32,8 @@ namespace Proximus
 
         private void Process()
         {
-
             var store = this.State.Store;
-            var osm = new OpenStreetMapsProxy();
+            var osm = OsmProxy;
             Parallel.ForEach(store.GeocodeMatrices(), (m) =>
             {
                 foreach (var n in f(m))
@@ -41,7 +44,6 @@ namespace Proximus
                 }
             });
         }
-
         public IEnumerable<string> f(GeocodeMatrix m) => m.Neighbours().Select(x => x.Code);
 
     }
