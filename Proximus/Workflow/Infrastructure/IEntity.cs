@@ -5,5 +5,6 @@ namespace Proximus
 {
     public interface IEntity
     {
+        string Id { get; }
     }
 }

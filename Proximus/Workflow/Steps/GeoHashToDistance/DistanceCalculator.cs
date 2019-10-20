@@ -35,7 +35,7 @@ namespace Proximus
             {
                 foreach (var n in f(m))
                 {
-                    var c = m.GeoCode.Code;
+                    var c = m.Geocode.Code;
                     var d = osm.FindDistance(c, n);
                     store.Add(GeoDistance.Create(c, n, d));
                 }

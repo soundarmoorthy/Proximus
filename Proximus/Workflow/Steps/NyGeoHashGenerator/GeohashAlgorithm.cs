@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace Proximus
 {
-    public class GeohashAlgorithm
+    internal class GeohashAlgorithm
     {
         private WorkflowDatastore store;
         private Action<string> Log;
 
-        public GeohashAlgorithm(WorkflowDatastore datastore, Action<string> log)
+        internal GeohashAlgorithm(WorkflowDatastore datastore, Action<string> log)
         {
             this.store = datastore;
             this.Log = log;

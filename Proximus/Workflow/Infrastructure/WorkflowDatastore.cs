@@ -3,25 +3,26 @@ using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using LiteDB;
+using LiteDB.Engine;
 
 namespace Proximus
 {
-    public class WorkflowDatastore
+    internal class WorkflowDatastore : IDisposable
     {
         private  DBCollection<Geocode> codes;
         private  DBCollection<GeoDistance> distances;
         private  DBCollection<GeocodeMatrix> matrices;
-        public WorkflowDatastore(string dir, bool drop=false)
+        public WorkflowDatastore(string dir)
         {
-            InitializeStore(dir, drop);
+            InitializeStore(dir);
 
         }
 
-        private void InitializeStore(string dir, bool drop)
+        private void InitializeStore(string dir)
         {
-            codes  =  new DBCollection<Geocode>(dir, drop);
-            distances = new DBCollection<GeoDistance>(dir,drop);
-            matrices = new DBCollection<GeocodeMatrix>(dir,drop);
+            codes  =  new DBCollection<Geocode>(dir);
+            distances = new DBCollection<GeoDistance>(dir);
+            matrices = new DBCollection<GeocodeMatrix>(dir);
         }
 
 
@@ -41,9 +42,20 @@ namespace Proximus
         public bool Exists(GeocodeMatrix matrix) => matrices.Exists(matrix);
         public bool Exists(GeoDistance distance) => distances.Exists(distance);
 
+        bool disposed = false;
+        public void Dispose()
+        {
+            if (!disposed)
+            {
+                if (codes != null) codes.Dispose();
+                if (matrices != null) matrices.Dispose();
+                if (distances != null) distances.Dispose();
+            }
+        }
     }
 
-    public class DBCollection<T> where T : IEntity
+    public class DBCollection<T> : IDisposable
+        where T : IEntity
     {
         LiteDatabase database;
         LiteCollection<T> collection;
@@ -56,11 +68,12 @@ namespace Proximus
         /// <param name="drop">Delete existing collection, if this is True. But in production we 
         /// won't set this to true. This is primarily used during 
         /// testing to cleanup the files and use freash ones for each run</param>
-        public DBCollection(string dir, bool drop=false)
+        internal DBCollection(string dir)
         {
-            database = new LiteDatabase(Path.Combine(dir, $"{typeof(T).FullName}.db"));
-            if (drop)
-                database.DropCollection(typeof(T).Name);
+            if (dir == null)
+                database = new LiteDatabase(new MemoryStream());
+            else
+                database = new LiteDatabase(Path.Combine(dir, $"{typeof(T).FullName}.db"));
 
             collection = database.GetCollection<T>(typeof(T).Name);
         }
@@ -72,9 +85,20 @@ namespace Proximus
 
         public bool Exists(T data)
         {
-            return collection.Find(x => x.Equals(data)).Any();
+            //All IEntity implementations will have a BsonField with Id
+            return collection.Exists(x => x.Id == data.Id);
         }
 
         public IEnumerable<T> enumerate() => collection.Query().ToEnumerable();
+
+        bool disposed = true;
+        public void Dispose()
+        {
+            if(!disposed)
+            {
+                if(database !=null) database.Dispose();
+                disposed = true;
+            }
+        }
     }
 }

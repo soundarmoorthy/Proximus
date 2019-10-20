@@ -20,7 +20,7 @@ namespace Proximus
   * @returns {{n,ne,e,se,s,sw,w,nw: string}}
   * @throws  Invalid geohash.
   */
-        public static GeocodeMatrix Neighbours(string code)
+        internal static GeocodeMatrix Neighbours(string code)
         {
             return GeocodeMatrix.Create(code)
                 .Add(adjacent(code, Direction.N))

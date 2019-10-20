@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LiteDB;
+using System;
 namespace Proximus
 {
     public class GeoDistance : IEntity
@@ -6,6 +7,15 @@ namespace Proximus
         public Geocode Start { get; private set; }
         public Geocode End { get; private set; }
         public double Miles { get; private set; }
+
+        [BsonField("Id")]
+        public string Id
+        {
+            get{ return Start.Id + End.Id; }
+            set { }
+        }
+
+
         public GeoDistance()
         {
         }
@@ -24,11 +34,11 @@ namespace Proximus
         {
             if (other == null)
                 return false;
-            if (other.GetType() != this.GetType())
+            if (! (other is GeoDistance))
                 return false;
             var obj = other as GeoDistance;
-            return this.Start == obj.Start &&
-                this.End == obj.End;
+            return this.Id == ((GeoDistance)other).Id;
         }
+
     }
 }
