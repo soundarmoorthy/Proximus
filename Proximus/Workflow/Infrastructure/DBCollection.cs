@@ -1,7 +1,8 @@
 ﻿using LiteDB;
 using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Proximus
 {
@@ -37,7 +38,8 @@ namespace Proximus
         public bool Exists(T data)
         {
             //All IEntity implementations will have a BsonField with Id
-            return collection.Exists(x => x.Id == data.Id);
+            var result = collection.Query().ToEnumerable();
+            return result.Any(x => x.Id == data.Id);
         }
 
         public IEnumerable<T> enumerate() => collection.Query().ToEnumerable();
