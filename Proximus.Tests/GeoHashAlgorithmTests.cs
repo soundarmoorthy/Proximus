@@ -33,7 +33,7 @@ namespace Proximus.Tests
                 a.Compute(code);
 
                 var actuals = store.Geocodes().ToList();
-                Assert.AreEqual(actuals.Count(), 32);
+                Assert.AreEqual(actuals.Count(), GeohashAlgorithm.suffix().Count());
                 foreach (var actual in actuals)
                 {
                     Assert.IsNotNull(actual);
