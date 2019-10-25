@@ -9,7 +9,6 @@
 
     <AssemblyOriginatorKeyFile>Key.snk.pfx</AssemblyOriginatorKeyFile>
 
-    <DelaySign>false</DelaySign>
   </PropertyGroup>
 
   <ItemGroup>

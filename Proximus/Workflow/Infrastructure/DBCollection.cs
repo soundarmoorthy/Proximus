@@ -32,7 +32,10 @@ namespace Proximus
 
         public void Add(T data)
         {
-            collection.Upsert(data);
+            if (this.Exists(data))
+                collection.Update(data);
+            else
+                collection.Insert(data);
         }
 
         public bool Exists(T data)
@@ -44,12 +47,17 @@ namespace Proximus
 
         public IEnumerable<T> enumerate() => collection.Query().ToEnumerable();
 
-        bool disposed = true;
+        bool disposed;
         public void Dispose()
         {
             if(!disposed)
             {
-                if(database !=null) database.Dispose();
+                if (database != null)
+                {
+                    database.Dispose();
+                    database = null;
+                    collection = null;
+                }
                 disposed = true;
             }
         }
