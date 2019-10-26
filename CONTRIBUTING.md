@@ -56,4 +56,4 @@ Calculating coverage result...
 > dotnet tool install -g dotnet-reportgenerator-globaltool
 
 and run the following command 
-> 
+> reportgenerator -reports:coverage.cobertura.xml -targetdir:./reports
