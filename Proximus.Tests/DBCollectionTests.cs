@@ -2,6 +2,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Linq;
+using System.IO;
+using Proximus;
 
 namespace Proximus.Tests
 {
@@ -12,6 +14,22 @@ namespace Proximus.Tests
         public DBCollectionTests()
         {
 
+        }
+
+        [TestMethod]
+        public void LiteDatabase_Is_Created_Succesfully()
+        {
+            var path = Path.Combine(Path.GetTempPath());
+            using (var duck = new DBCollection<Foo>(path))
+            {
+                duck.Add(new Foo("100"));
+                duck.Exists(new Foo("100"));
+                duck.enumerate();
+            }
+
+            var expected = Path.Combine(Path.GetTempPath(), $"{typeof(Foo).FullName}.db");
+            Assert.IsTrue(File.Exists(expected));
+            File.Delete(expected);
         }
 
         [TestMethod]

@@ -17,9 +17,6 @@ namespace Proximus
         /// </summary>
         /// <param name="dir">Directory in which the collection should be created. Read and Write permissions 
         /// should exist</param>
-        /// <param name="drop">Delete existing collection, if this is True. But in production we 
-        /// won't set this to true. This is primarily used during 
-        /// testing to cleanup the files and use freash ones for each run</param>
         internal DBCollection(string dir)
         {
             if (dir == null)
@@ -40,8 +37,9 @@ namespace Proximus
 
         public bool Exists(T data)
         {
-            //All IEntity implementations will have a BsonField with Id
             var result = collection.Query().ToEnumerable();
+
+            //All IEntity implementations will have a BsonField with Id
             return result.Any(x => x.Id == data.Id);
         }
 
