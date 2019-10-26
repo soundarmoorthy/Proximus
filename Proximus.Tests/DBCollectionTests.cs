@@ -16,7 +16,8 @@ namespace Proximus.Tests
 
         }
 
-        [TestMethod]
+
+       [TestMethod]
         public void LiteDatabase_Is_Created_Succesfully()
         {
             var path = Path.Combine(Path.GetTempPath());
