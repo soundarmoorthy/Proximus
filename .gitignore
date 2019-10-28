@@ -261,3 +261,6 @@ __pycache__/
 *.pyc
 ./Proximus.Tests/coverage.cobertura.xml
 ./Proximus.Tests/coverage.json
+**/.DS_Store
+**/Proximus.Tests/reports/**
+
