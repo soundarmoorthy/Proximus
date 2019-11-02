@@ -90,17 +90,7 @@ namespace Proximus
         }
     }
 
-    public class Bound
-    {
-        public Location SW { get; set; }
-        public Location NE { get; set; }
-    }
 
-    public static class MyExtensionMethods
-    {
-        public static string ToFixed(this double number, double decimals)
-        {
-            return number.ToString("N" + decimals);
-        }
-    }
+
+
 }
