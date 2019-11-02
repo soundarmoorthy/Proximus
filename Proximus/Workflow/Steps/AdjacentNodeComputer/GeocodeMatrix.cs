@@ -7,8 +7,8 @@ namespace Proximus
 {
     internal class GeocodeMatrix : IEntity
     {
-        public Geocode Geocode { get; set; }
-        public Geocode[] neighbours { get; set; }
+        public Geocode Geocode { get;  set; }
+        public  Geocode[] neighbours { get; set; }
 
         [BsonField("Id")]
         public string Id

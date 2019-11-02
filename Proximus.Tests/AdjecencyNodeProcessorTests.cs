@@ -24,6 +24,32 @@ namespace Proximus.Tests
             }
         }
 
+        [TestMethod]
+        public void Valid_Geocode_Is_Processed_Succesfully_And_The_Neighbours_Are_Intact()
+        {
+            using (var store = TestSetup.Store())
+            {
+                //Add invalid Geocode
+                store.Add(new Geocode() { Code = "9239391" });
+
+                var state = TestSetup.Workflowstate(store);
+                var pro = new AdjecencyNodeProcessor(state);
+
+                pro.Start();
+
+                var matrices = store.GeocodeMatrices();
+
+                Assert.AreEqual(1, matrices.Count());
+
+                var matrix = matrices.First();
+                Assert.IsNotNull(matrix);
+
+                CollectionAssert.AllItemsAreNotNull(matrix.Neighbours().ToArray());
+                CollectionAssert.AllItemsAreUnique(matrix.Neighbours().ToArray());
+                Assert.IsTrue(matrix.Neighbours().All(x => GeohashAlgorithm.Valid(x)));
+            }
+        }
+
 
     }
 }
