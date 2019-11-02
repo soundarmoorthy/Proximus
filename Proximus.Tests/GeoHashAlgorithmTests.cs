@@ -9,11 +9,11 @@ namespace Proximus.Tests
     [TestClass]
     public class GeoHashAlgorithmTests
     {
-        private const string MemoryStreamDB = null;
+
         [TestMethod]
         public void Computes_Only_GeoHashes_With_Length_7()
         {
-            using (WorkflowDatastore store = new WorkflowDatastore(MemoryStreamDB))
+            using (WorkflowDatastore store = TestSetup.Store())
             {
                 GeohashAlgorithm a = new GeohashAlgorithm(store, x => { });
                 var code = "23fghn9";
@@ -26,7 +26,7 @@ namespace Proximus.Tests
         [TestMethod]
         public void Computes_All_Valid_Suffixes()
         {
-            using (WorkflowDatastore store = new WorkflowDatastore(MemoryStreamDB))
+            using (WorkflowDatastore store = TestSetup.Store())
             {
                 GeohashAlgorithm a = new GeohashAlgorithm(store, x => { });
                 var code = "010123";
@@ -51,10 +51,21 @@ namespace Proximus.Tests
         }
 
         [TestMethod]
+        public void Geohash_Suffixes_Proper_Subset_Returns_False_For_Disallowed_Chars()
+        {
+            var subset = new Geocode { Code = "ialoiao" };
+
+            var valid = GeohashAlgorithm.Valid(subset);
+
+            Assert.IsFalse(valid);
+
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void Throws_Exception_On_Compute_For_Inalid_Chars()
         {
-            using (var store = new WorkflowDatastore(MemoryStreamDB))
+            using (var store = TestSetup.Store())
             {
                 var a = new GeohashAlgorithm(store, x => { });
                 a.ComputeAndStore("lila");

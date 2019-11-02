@@ -12,13 +12,12 @@ namespace Proximus.Tests
     [TestClass]
     public class WorkflowDatastoreGeoCodeTests
     {
-        private const string MemoryStreamDB = null;
 
         [TestMethod]
         public void WorkflowDataStore_Add_GeoCode_Succeeds()
         {
             //setup
-            using (var store = new WorkflowDatastore(MemoryStreamDB))
+            using (var store = TestSetup.Store())
             {
                 store.Add(Geocode.None);
 
@@ -37,7 +36,7 @@ namespace Proximus.Tests
         [TestMethod]
         public void WorkflowDataStore_Exists_GeoCode_Succeeds()
         {
-            using (var store = new WorkflowDatastore(MemoryStreamDB))
+            using (var store = TestSetup.Store())
             {
                 store.Add(Geocode.None);
                 var exists = store.Exists(Geocode.None);
@@ -51,7 +50,7 @@ namespace Proximus.Tests
         [TestMethod]
         public void WorkflowDataStore_Enumerate_GeoCode_Succeeds()
         {
-            using (var store = new WorkflowDatastore(MemoryStreamDB))
+            using (var store = TestSetup.Store())
             {
                 int count = Populate(store);
                 var geocodes = store.Geocodes();

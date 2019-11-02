@@ -40,5 +40,10 @@ namespace Proximus
             return this.Id == ((GeoDistance)other).Id;
         }
 
+        public override int GetHashCode()
+        {
+            return this.Id.GetHashCode();
+        }
+
     }
 }

@@ -30,4 +30,7 @@
     <ProjectReference Include="..\Proximus\Proximus.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="coverage.cobertura.xml" />
+  </ItemGroup>
 </Project>
