@@ -26,7 +26,7 @@ namespace Proximus
             if (!GeohashAlgorithm.Valid(geo))
                 return;
 
-            var matrix = NodeNeighbour.Neighbours(geo.Code);
+            var matrix = GeohashNeighbours.Compute(geo.Code);
             Log($"Generated {matrix}");
             store().Add(matrix);
         }

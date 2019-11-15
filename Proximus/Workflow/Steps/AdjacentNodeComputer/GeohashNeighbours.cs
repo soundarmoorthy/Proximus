@@ -4,13 +4,21 @@ using System.Collections.Generic;
 
 namespace Proximus
 {
-    public class NodeNeighbour
+    public class GeohashNeighbours
     {
-        public NodeNeighbour()
+        public GeohashNeighbours()
         {
         }
 
         const string base32 = "0123456789bcdefghjkmnpqrstuvwxyz"; // (geohash-specific) Base32 map
+
+        private static IEnumerable<Direction> directions;
+        private static IEnumerable<Direction> Directions()
+        {
+            if (directions == null)
+                directions = Enum.GetValues(typeof(Direction)).Cast<Direction>();
+            return directions;
+        }
 
 
         /**
@@ -20,44 +28,39 @@ namespace Proximus
   * @returns {{n,ne,e,se,s,sw,w,nw: string}}
   * @throws  Invalid geohash.
   */
-        internal static GeocodeMatrix Neighbours(string code)
+        internal static GeocodeMatrix Compute(string code)
         {
-            return GeocodeMatrix.Create(code)
-                .Add(adjacent(code, Direction.N))
-                .Add(adjacent(adjacent(code, Direction.N), Direction.E))
-                .Add(adjacent(code, Direction.E))
-                .Add(adjacent(adjacent(code, Direction.S), Direction.E))
-                .Add(adjacent(code, Direction.S))
-                .Add(adjacent(adjacent(code, Direction.S), Direction.W))
-                .Add(adjacent(code, Direction.W))
-                .Add(adjacent(adjacent(code, Direction.N), Direction.W));
-        }
+            if (!GeohashAlgorithm.Valid(new Geocode { Code = code }))
+                throw new ArgumentException("The given geocode is invalid.");
 
 
-        private static Geocode adjacent(Geocode geoCode, Direction d)
-        {
-            return Geocode.None;
+            var values = Directions()
+                .Select(d => new Geocode { Code = adjacent(code, d) });
+
+
+            var matrix = GeocodeMatrix.Create(code, values.ToArray());
+
+            return matrix;
         }
 
         /**
-    * Determines adjacent cell in given direction.
-    *
-    * @param   geohash - Cell to which adjacent cell is required.
-    * @param   direction - Direction from geohash (N/S/E/W).
-    * @returns {string} Geocode of adjacent cell.
-    * @throws  Invalid geohash.
+         * Determines adjacent cell in given direction.
+         *
+         * @param   geohash - Cell to which adjacent cell is required.
+         * @param   direction - Direction from geohash (N/S/E/W).
+         * @returns {string} Geocode of adjacent cell.
+         * @throws  ArgumentException - When given geohash is invalid.
     */
         private static string adjacent(string geohash, Direction d)
         {
             geohash = geohash.ToLower();
-            // based on github.com/davetroy/geohash-js
+
+            // The following logic is based on github.com/davetroy/geohash-js
+
             var direction = d.ToString().ToLower()[0];
 
-            if (geohash.Length == 0)
-                throw new Exception("Invalid geohash");
-
             if ("nsew".IndexOf(direction, StringComparison.InvariantCultureIgnoreCase) == -1)
-                throw new Exception("Invalid direction");
+                throw new ArgumentException("Invalid direction");
 
             var lastCh = geohash.Last();    // last character of hash
             var parent = geohash.Substring(0, geohash.Length - 1);
@@ -71,12 +74,6 @@ namespace Proximus
             }
 
             var index = neighbour[direction][type].IndexOf(lastCh);
-
-            if(index == -1)
-            {
-                Console.WriteLine(geohash + " " + direction + " " + index);
-
-            }
 
             // append letter for direction to parent
             return $"{parent}{base32[index]}";

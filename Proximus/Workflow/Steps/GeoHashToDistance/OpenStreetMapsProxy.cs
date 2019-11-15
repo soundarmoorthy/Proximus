@@ -18,7 +18,7 @@ namespace Proximus
        {
             try
             {
-                var geoHash = new GeoHash();
+                var geoHash = new Geohash();
                 var l1 = geoHash.Decode(source);
                 var l2 = geoHash.Decode(dest);
                 var distance =  OpenStreetMaps.GetDistance(l1, l2);

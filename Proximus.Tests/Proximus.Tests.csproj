@@ -32,5 +32,6 @@
 
   <ItemGroup>
     <None Remove="coverage.cobertura.xml" />
+    <None Remove="coverage.cobertura.xml" />
   </ItemGroup>
 </Project>

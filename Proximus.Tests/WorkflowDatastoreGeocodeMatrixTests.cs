@@ -19,7 +19,7 @@ namespace Proximus.Tests
             //setup
             using (var store = TestSetup.Store())
             {
-                var expected = GeocodeMatrix.Create("hello");
+                var expected = GeocodeMatrix.Create("hello", null);
                 store.Add(expected);
 
                 //Assert. Since this is a clean DB, we need to make sure
@@ -82,10 +82,10 @@ namespace Proximus.Tests
         {
             //Path.GetTempFileName() gives you random string. Not necessarily
             //unique. But that is good enough
-            var m = GeocodeMatrix.Create(Path.GetRandomFileName());
-            for (int i = 0; i < m.Neighbours().Count(); i++)
-                m.Add(Path.GetRandomFileName());
-            return m;
+            var values = Enumerable.Repeat(
+                new Geocode() { Code = Path.GetRandomFileName() },
+                Enum.GetNames(typeof(Direction)).Length).ToArray();
+            return GeocodeMatrix.Create(Path.GetRandomFileName(), values);
         }
     }
 }

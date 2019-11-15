@@ -14,7 +14,7 @@ namespace Proximus
         public string Id
         {
             get { return this.Geocode.Code; }
-            set { }
+            set { value.FirstOrDefault(); }//Make compiler happy  
         }
 
         public GeocodeMatrix()
@@ -22,27 +22,26 @@ namespace Proximus
 
         }
 
-        public GeocodeMatrix(string geoHash)
+        private static readonly int neighbourCount = Enum.GetValues(typeof(Direction)).GetLength(0);
+
+        public GeocodeMatrix(string geoHash, Geocode[] geocodes)
         {
             this.Geocode = new Geocode() { Code = geoHash };
 
-            var count = Enum.GetValues(typeof(Direction)).GetLength(0);
-            neighbours = new Geocode[count];
-            for(int i =0;i<neighbours.Count();i++)
-               neighbours[i] = Geocode.None;
+            if (geocodes == null)
+            {
+                neighbours = Enumerable.Repeat(Geocode.None, neighbourCount).ToArray();
+            }
+            else
+                neighbours = geocodes;
         }
 
 
-        public static GeocodeMatrix Create(string geohash) => new GeocodeMatrix(geohash);
+        public static GeocodeMatrix Create(string geohash, Geocode[] geocodes = null) =>
+            new GeocodeMatrix(geohash, geocodes);
       
         public IEnumerable<Geocode> Neighbours() => neighbours;
             
-        private int index=0;
-        internal GeocodeMatrix Add(string c)
-        {
-            neighbours[index++] = new Geocode() { Code = c };
-            return this;
-        }
 
         public override bool Equals(object obj)
         {

@@ -58,7 +58,7 @@ namespace Proximus
                 return;
             }
 
-            foreach (var s in suffix())
+            foreach (var s in base32())
             {
                 Compute(code + s);
             }
@@ -75,7 +75,7 @@ namespace Proximus
             if (string.IsNullOrEmpty(code))
                 return false;
 
-            return code.ToHashSet().IsProperSubsetOf(suffix());
+            return code.ToHashSet().IsProperSubsetOf(base32());
         }
 
 
@@ -84,7 +84,7 @@ namespace Proximus
         /// at a 192 meter accuracy. 
 
         private static HashSet<char> suffixes;
-        internal static HashSet<char> suffix()
+        internal static HashSet<char> base32()
         {
             if (suffixes == null)
                 suffixes = new HashSet<char>(initializeSuffixes());

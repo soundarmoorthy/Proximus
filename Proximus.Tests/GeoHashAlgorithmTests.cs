@@ -33,7 +33,7 @@ namespace Proximus.Tests
                 a.ComputeAndStore(code);
 
                 var actuals = store.Geocodes().ToList();
-                Assert.AreEqual(actuals.Count(), GeohashAlgorithm.suffix().Count());
+                Assert.AreEqual(actuals.Count(), GeohashAlgorithm.base32().Count());
                 foreach (var actual in actuals)
                 {
                     Assert.IsNotNull(actual);
@@ -45,7 +45,7 @@ namespace Proximus.Tests
                     //defined by the algorithm, so this should still test the
                     //required functionality.
                     CollectionAssert.IsSubsetOf(actual.Code.Distinct().ToArray(),
-                        GeohashAlgorithm.suffix().ToArray());
+                        GeohashAlgorithm.base32().ToArray());
                 }
             }
         }

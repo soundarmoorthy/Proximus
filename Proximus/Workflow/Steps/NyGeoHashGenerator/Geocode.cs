@@ -42,9 +42,10 @@ namespace Proximus
 
         public override int GetHashCode()
         {
-            var hash =  this.Code.GetHashCode();
+            var hash = this.Code.GetHashCode();
             return hash;
         }
+
 
         public override string ToString()
         {

@@ -45,7 +45,6 @@ namespace Proximus.Tests
                 Assert.IsNotNull(matrix);
 
                 CollectionAssert.AllItemsAreNotNull(matrix.Neighbours().ToArray());
-                CollectionAssert.AllItemsAreUnique(matrix.Neighbours().ToArray());
                 Assert.IsTrue(matrix.Neighbours().All(x => GeohashAlgorithm.Valid(x)));
             }
         }
