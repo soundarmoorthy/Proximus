@@ -6,6 +6,12 @@ namespace Proximus
     {
         public double Lat { get; set; }
         public double Lng { get; set; }
+
+
+        public override string ToString()
+        {
+            return this.Lat.ToString() + "," + this.Lng.ToString();
+        }
     }
 
     public class Geohash

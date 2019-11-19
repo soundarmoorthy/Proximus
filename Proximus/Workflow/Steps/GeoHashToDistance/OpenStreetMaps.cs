@@ -8,38 +8,61 @@ using System.Threading.Tasks;
 
 namespace Proximus
 {
-    public static class OpenStreetMaps
+    public class OpenStreetMaps
     {
-        private static int _connectionLeaseTimeoutMs = 105000;
 
-        static OpenStreetMaps()
+
+
+        private int _connectionLeaseTimeoutMs = 105000;
+
+        private string osmUriFormat = "http://localhost:8989/route?point={0}&point={1}&weighting=fastest";
+
+        private static OpenStreetMaps instance;
+        public static OpenStreetMaps Instance
         {
+            get
+            {
+                if (instance == null)
+                    instance = new OpenStreetMaps();
+                return instance;
+            }
         }
-        public static double GetDistance(Location l1, Location l2)
+
+        Geohash geoHash;
+        private OpenStreetMaps()
         {
-            var sourceLatLng = l1.Lat.ToString() + "," + l1.Lng.ToString();
-            var destinationLatLng = l2.Lat.ToString() + "," + l2.Lng.ToString();
-            var uri = new Uri($"http://localhost:8989/route?point={sourceLatLng}&point={destinationLatLng}&weighting=fastest");
+            geoHash = new Geohash();
+        }
+
+        public double GetDistance(string source, string dest)
+        {
+
+            var l1 = geoHash.Decode(source);
+            var l2 = geoHash.Decode(dest);
+            var distance = response(l1, l2);
+
+            if (Math.Abs(distance - double.Epsilon) < double.Epsilon)
+            {
+                distance = 1; // 1 mtr in miles
+            }
+            return distance;
+        }
+
+        private double response(Location l1, Location l2)
+        {
+            var uri = new Uri(string.Format(osmUriFormat, l1.ToString(), l2.ToString()));
             var sp = ServicePointManager.FindServicePoint(uri);
             sp.ConnectionLeaseTimeout = _connectionLeaseTimeoutMs;
 
+            GeoResponse result = null;
             using (var httpClient = new HttpClient())
             {
                 var response = httpClient.GetAsync(uri);
-
                 var str = response.Result.Content.ReadAsStringAsync().Result;
-                var geoDistanceResponse = JsonConvert.DeserializeObject<GeoResponse>(str);
-                double distance = geoDistanceResponse.Paths?.FirstOrDefault().Distance ?? 0;
-                double duration = geoDistanceResponse.Paths?.FirstOrDefault().Time ?? 0;
-
-                if (Math.Abs(distance - double.Epsilon) < double.Epsilon)
-                {
-                    distance = 1; // 1 mtr in miles
-                    duration = 1000; // 1 sec
-                }
-                duration /= 1000; //milli-sec -> sec
-                return distance;
+                result = JsonConvert.DeserializeObject<GeoResponse>(str);
             }
+            double distance = result.Paths?.FirstOrDefault().Distance ?? 0;
+            return distance;
         }
     }
 
