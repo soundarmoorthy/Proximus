@@ -9,7 +9,7 @@ namespace Proximus
     internal sealed class Workflow
     {
 
-        IEnumerable<WorkflowStep> Steps;
+        private IEnumerable<WorkflowStep> Steps;
         internal Workflow(IEnumerable<WorkflowStep> steps)
         {
             this.Steps = steps;

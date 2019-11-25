@@ -1,6 +1,7 @@
 ﻿using System;
 namespace Proximus
 {
+    
     internal abstract class WorkflowState
     {
         public Logger Logger { private set;  get; }

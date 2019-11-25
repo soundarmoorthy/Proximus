@@ -1,53 +1,66 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using LiteDB;
 
 namespace Proximus
 {
-    public class GeocodeMatrix : IEntity
+    internal class GeocodeMatrix : IEntity
     {
-        public Geocode GeoCode { get; set; }
-        public Geocode[] neighbours { get; set; }
+        public Geocode Geocode { get;  set; }
+        public  Geocode[] neighbours { get; set; }
+
+        [BsonField("Id")]
+        public string Id
+        {
+            get { return this.Geocode.Code; }
+            set { value.FirstOrDefault(); }//Make compiler happy  
+        }
 
         public GeocodeMatrix()
         {
 
         }
 
-        public GeocodeMatrix(string geoHash)
-        {
-            this.GeoCode = new Geocode() { Code = geoHash };
+        private static readonly int neighbourCount = Enum.GetValues(typeof(Direction)).GetLength(0);
 
-            var count = Enum.GetValues(typeof(Direction)).GetLength(0);
-            neighbours = new Geocode[count];
+        public GeocodeMatrix(string geoHash, Geocode[] geocodes)
+        {
+            this.Geocode = new Geocode() { Code = geoHash };
+
+            if (geocodes == null)
+            {
+                neighbours = Enumerable.Repeat(Geocode.None, neighbourCount).ToArray();
+            }
+            else
+                neighbours = geocodes;
         }
 
 
-        public static GeocodeMatrix Create(string geohash) => new GeocodeMatrix(geohash);
+        public static GeocodeMatrix Create(string geohash, Geocode[] geocodes = null) =>
+            new GeocodeMatrix(geohash, geocodes);
       
         public IEnumerable<Geocode> Neighbours() => neighbours;
             
-        private int index=0;
-        public GeocodeMatrix Add(string c)
-        {
-            neighbours[index++] = new Geocode() { Code = c };
-            return this;
-        }
 
         public override bool Equals(object obj)
         {
             if (obj == null)
                 return false;
-            if (obj.GetType() != this.GetType())
+            if (!(obj is GeocodeMatrix))
                 return false;
 
-            return this.GeoCode == ((GeocodeMatrix)obj).GeoCode;
+            return this.Geocode.Equals(((GeocodeMatrix)obj).Geocode);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Geocode.GetHashCode();
         }
 
         public override string ToString()
         {
-            return $"{this.GeoCode}-[{string.Join(',', neighbours.Select(x => x.Code))}]";
+            return $"{this.Geocode}-[{string.Join(',', neighbours.Select(x => x.Code))}]";
         }
-
     }
 }

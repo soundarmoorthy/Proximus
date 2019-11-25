@@ -1,21 +1,37 @@
 ﻿using System;
-
+using System.Linq;
 namespace Proximus
 {
     public class Location
     {
         public double Lat { get; set; }
         public double Lng { get; set; }
+
+
+        public override string ToString()
+        {
+            return this.Lat.ToString() + "," + this.Lng.ToString();
+        }
     }
 
-    public class GeoHash
+    public class Geohash
     {
-        private string _base32 = "0123456789bcdefghjkmnpqrstuvwxyz";
+
+        static string _base32;
+
+        static Geohash()
+        {
+
+            _base32 = GeohashAlgorithm.base32().ToArray().ToString();
+        }
+        
         public Bound GetBound(string geohash)
         {
-            if (geohash.Length == 0) throw new Exception("Invalid geohash");
-
             geohash = geohash.ToLower();
+
+            if (!GeohashAlgorithm.Valid(new Geocode() { Code = geohash }))
+                throw new ArgumentException("Invalid geohash");
+
 
             var evenBit = true;
             double latMin = -90, latMax = 90;
@@ -24,8 +40,8 @@ namespace Proximus
             for (var i = 0; i < geohash.Length; i++)
             {
                 var chr = geohash[i];
+
                 var idx = _base32.IndexOf(chr);
-                if (idx == -1) throw new Exception("Invalid geohash");
 
                 for (var n = 4; n >= 0; n--)
                 {
@@ -90,17 +106,7 @@ namespace Proximus
         }
     }
 
-    public class Bound
-    {
-        public Location SW { get; set; }
-        public Location NE { get; set; }
-    }
 
-    public static class MyExtensionMethods
-    {
-        public static string ToFixed(this double number, double decimals)
-        {
-            return number.ToString("N" + decimals);
-        }
-    }
+
+
 }

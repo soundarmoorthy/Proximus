@@ -15,14 +15,20 @@ namespace Proximus
 
         public override void Start()
         {
-            var s = store();
-            Parallel.ForEach(s.Geocodes(), (geo) =>
+            foreach (var geo in store().Geocodes())
             {
-                var matrix = NodeNeighbour.Neighbours(geo.Code);
-                Log($"Generated {matrix}");
-                s.Add(matrix);
+                Process(geo);
             }
-            );
+        }
+
+        private void Process(Geocode geo)
+        {
+            if (!GeohashAlgorithm.Valid(geo))
+                return;
+
+            var matrix = GeohashNeighbours.Compute(geo.Code);
+            Log($"Generated {matrix}");
+            store().Add(matrix);
         }
 
         public override void Stop()

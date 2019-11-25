@@ -1,9 +1,11 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Proximus
 {
+    [ExcludeFromCodeCoverage]
     public sealed class WorkflowRunner
     {
 

@@ -8,7 +8,7 @@ namespace Proximus
 {
     internal class DistanceCalculator : WorkflowStep
     {
-        
+
         internal DistanceCalculator(WorkflowState state) : base(state)
         {
 
@@ -28,20 +28,18 @@ namespace Proximus
 
         private void Process()
         {
-
             var store = this.State.Store;
-            var osm = new OpenStreetMapsProxy();
+            var osm = OpenStreetMaps.Instance;
             Parallel.ForEach(store.GeocodeMatrices(), (m) =>
             {
                 foreach (var n in f(m))
                 {
-                    var c = m.GeoCode.Code;
+                    var c = m.Geocode.Code;
                     var d = osm.FindDistance(c, n);
                     store.Add(GeoDistance.Create(c, n, d));
                 }
             });
         }
-
         public IEnumerable<string> f(GeocodeMatrix m) => m.Neighbours().Select(x => x.Code);
 
     }

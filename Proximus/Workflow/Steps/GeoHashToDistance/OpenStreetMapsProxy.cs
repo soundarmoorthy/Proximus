@@ -6,30 +6,10 @@ using System.Threading.Tasks;
 
 namespace Proximus
 {
-    public class OpenStreetMapsProxy
+    internal class OpenStreetMapsProxy
     {
-
-        public OpenStreetMapsProxy()
+        internal OpenStreetMapsProxy()
         {
-
-        }
-
-        public double FindDistance(string source, string dest)
-       {
-            try
-            {
-                var geoHash = new GeoHash();
-                var l1 = geoHash.Decode(source);
-                var l2 = geoHash.Decode(dest);
-                var distance =  OpenStreetMaps.GetDistance(l1, l2);
-
-                return distance;
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
-            throw new Exception();
         }
     }
 }

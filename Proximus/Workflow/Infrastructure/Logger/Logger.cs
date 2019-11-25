@@ -48,8 +48,9 @@ namespace Proximus
                 {
                     s.Log(message);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    Log(ex.ToString());
                 }
             });
 

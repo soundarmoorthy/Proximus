@@ -5,7 +5,7 @@ namespace Proximus
 {
     public static class HttpRequestExtensions
     {
-        private static string TimeoutPropertyKey = "RequestTimeout";
+        internal static string TimeoutPropertyKey = "RequestTimeout";
 
         public static void SetTimeout(
             this HttpRequestMessage request,
